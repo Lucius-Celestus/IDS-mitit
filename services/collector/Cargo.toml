@@ -1,0 +1,10 @@
+[package]
+name = "ids_collector"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+pcap = "1.1"
+etherparse = "0.13"
+ureq = "2.9"
+std = "1.0"

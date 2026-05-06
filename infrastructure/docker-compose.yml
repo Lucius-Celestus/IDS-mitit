@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.0
+    container_name: ids_storage
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpassword
+      - DOCKER_INFLUXDB_INIT_ORG=soc
+      - DOCKER_INFLUXDB_INIT_BUCKET=traffic
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=supersecret-auth-token
+    networks:
+      - ids_net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ids_visualizer
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - influxdb
+    networks:
+      - ids_net
+
+  collector:
+    build: ./services/collector
+    container_name: ids_collector
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    env_file: .env
+    restart: always
+
+  analyzer:
+    build: ./services/analyzer
+    container_name: ids_analyzer
+    network_mode: "host"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    env_file: .env
+    volumes:
+      - ./services/analyzer/models:/app/models:ro
+    depends_on:
+      - influxdb
+    restart: always
+
+networks:
+  ids_net:
+    driver: bridge
