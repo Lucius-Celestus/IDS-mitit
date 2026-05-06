@@ -10,9 +10,7 @@ class RawMitigator:
 
     def _init_firewall(self):
         try:
-            # Очищаем таблицу RAW при старте для чистого запуска
             subprocess.run(["iptables", "-t", "raw", "-F"], check=True)
-            # Разрешаем ESTABLISHED трафик, чтобы не рвать текущие сессии
             subprocess.run([
                 "iptables", "-t", "raw", "-A", "PREROUTING", 
                 "-m", "conntrack", "--ctstate", "ESTABLISHED,RELATED", "-j", "ACCEPT"
@@ -26,8 +24,6 @@ class RawMitigator:
             return False
 
         try:
-            # Вставляем DROP в начало таблицы RAW. 
-            # Это убивает пакет ДО conntrack и Docker-маршрутизации.
             subprocess.run([
                 "iptables", "-t", "raw", "-I", "PREROUTING", "1", 
                 "-s", ip, "-j", "DROP"

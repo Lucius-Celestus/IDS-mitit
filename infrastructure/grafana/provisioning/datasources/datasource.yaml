@@ -10,4 +10,4 @@ datasources:
       defaultBucket: traffic
       tlsSkipVerify: true
     secureJsonData:
-      token: supersecret-auth-token # Тот же, что в .env
+      token: supersecret-auth-token 

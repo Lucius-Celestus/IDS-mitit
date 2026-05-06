@@ -1,4 +1,3 @@
 pandas
 lightgbm
 influxdb-client
-ureq

@@ -9,7 +9,7 @@ from core.mitigator import RawMitigator
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 
-# Конфигурация
+
 MODEL_PATH = os.environ.get("MODEL_PATH")
 INFLUX_URL = "http://localhost:8086"
 TOKEN = os.environ.get("INFLUX_TOKEN")
@@ -17,7 +17,7 @@ ORG = os.environ.get("INFLUX_ORG")
 BUCKET = os.environ.get("INFLUX_BUCKET")
 THRESHOLD = float(os.environ.get("PROB_THRESHOLD", 0.85))
 
-# Инициализация сервисов
+
 client = InfluxDBClient(url=INFLUX_URL, token=TOKEN, org=ORG)
 query_api = client.query_api()
 write_api = client.write_api(write_options=SYNCHRONOUS)
@@ -25,10 +25,8 @@ mitigator = RawMitigator(os.environ.get("WHITELIST", "127.0.0.1"))
 
 def classify_threat(row):
     spkts, dpkts = row.get('spkts', 0), row.get('dpkts', 0)
-    # Если исходящих много, а входящих почти нет - это агрессор
     if spkts > 100 and dpkts < 10:
         return "SYN Flood / DoS"
-    # Если много в обе стороны - это жертва (Backscatter)
     if spkts > 100 and dpkts > 100:
         return "Server_Response_Ignore"
     return "Anomaly"
@@ -58,7 +56,6 @@ while True:
                     if "Ignore" not in threat:
                         logging.warning(f"THREAT DETECTED: {threat} from {src} (Prob: {prob:.2f})")
                         if mitigator.block(src):
-                            # Логируем алерт обратно в Influx для Grafana
                             point = Point("ids_alert").tag("src_ip", src).tag("type", threat).field("conf", prob)
                             write_api.write(bucket=BUCKET, record=point)
         
