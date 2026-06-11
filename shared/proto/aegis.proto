@@ -1,0 +1,22 @@
+syntax = "proto3";
+package aegis;
+
+message PacketVector {
+    uint32 packet_len = 1;
+    double iat = 2;
+    float entropy = 3;
+    bytes payload_head = 4;
+    uint32 tcp_flags = 5;
+    string src_ip = 6;
+    uint32 dest_port = 7; // Наш новый признак для калибровки
+}
+
+message Verdict {
+    string target_ip = 1;
+    bool drop = 2;
+    float confidence = 3;
+}
+
+service AegisService {
+    rpc Analyze(PacketVector) returns (Verdict);
+}

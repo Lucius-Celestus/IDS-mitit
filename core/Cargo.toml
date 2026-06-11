@@ -1,0 +1,27 @@
+[package]
+name = "aegis-core"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+shadow_mode = []  # Enable shadow mode (don't actually block IPs)
+production = []   # Enable production mode (actually block IPs)
+
+[dependencies]
+# Работа с сетевыми интерфейсами и PCAP
+pcap = "1.1"
+etherparse = "0.13" 
+# Асинхронность и gRPC
+tokio = { version = "1", features = ["full"] }
+tonic = "0.10"
+prost = "0.12"
+# Аналитика
+entropy = "0.4"
+chrono = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+lazy_static = "1.4.0"
+[build-dependencies]
+tonic-build = "0.10"

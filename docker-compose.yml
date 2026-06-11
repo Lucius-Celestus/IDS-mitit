@@ -1,57 +1,54 @@
-version: '3.8'
-
 services:
-  influxdb:
-    image: influxdb:2.0
-    container_name: ids_storage
-    ports:
-      - "8086:8086"
+  brain:
+    build:
+      context: .
+      dockerfile: brain/Dockerfile
+    network_mode: "host"
+    volumes:
+      - ./data:/app/data:rw
     environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpassword
-      - DOCKER_INFLUXDB_INIT_ORG=soc
-      - DOCKER_INFLUXDB_INIT_BUCKET=traffic
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=supersecret-auth-token
-    networks:
-      - ids_net
+      - PYTHONUNBUFFERED=1
+      - BLOCK_MODE=shadow
+      - ALERT_THRESHOLD=0.5
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: ids_visualizer
-    ports:
-      - "3000:3000"
+  core:
+    build:
+      context: .
+      dockerfile: core/Dockerfile
+    network_mode: "host"
     volumes:
-      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning:ro
-    depends_on:
-      - influxdb
-    networks:
-      - ids_net
-
-  collector:
-    build: ./services/collector
-    container_name: ids_collector
-    network_mode: "host"
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    env_file: .env
-    restart: always
-
-  analyzer:
-    build: ./services/analyzer
-    container_name: ids_analyzer
-    network_mode: "host"
+      - ./data:/app/data:rw
+    environment:
+      - IFACE=wlp3s0
+      - BRAIN_ADDR=http://127.0.0.1:50051
+      - BLOCK_MODE=shadow
     privileged: true
-    cap_add:
-      - NET_ADMIN
-    env_file: .env
-    volumes:
-      - ./services/analyzer/models:/app/models:ro
-    depends_on:
-      - influxdb
-    restart: always
 
-networks:
-  ids_net:
-    driver: bridge
+  eye:
+    build:
+      context: .
+      dockerfile: eye/Dockerfile
+    network_mode: "host"
+    volumes:
+      - ./data:/app/data:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  retrainer:
+    build:
+      context: .
+      dockerfile: brain/Dockerfile
+    volumes:
+      - ./data:/app/data:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+    entrypoint: >
+      bash -c "
+      while true; do
+        echo '[*] Running model retraining...'
+        python /app/src/training.py 2>&1 || echo 'Retraining cycle failed'
+        sleep 3600
+      done
+      "
+    depends_on:
+      - brain

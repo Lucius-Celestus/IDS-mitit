@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+grpcio
+grpcio-tools
+protobuf
+python-multipart
+scikit-learn
+joblib
+pandas
+numpy==1.24.3

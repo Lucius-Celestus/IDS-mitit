@@ -1,0 +1,13 @@
+numpy==1.24.3
+pandas
+scikit-learn
+scipy
+grpcio
+protobuf
+grpcio-tools
+joblib
+matplotlib
+seaborn
+fastapi
+uvicorn
+python-multipart

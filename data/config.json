@@ -1,0 +1,6 @@
+{
+  "alert_threshold": 0.5,
+  "block_mode": "shadow",
+  "auto_retrain": true,
+  "feedback_required": false
+}

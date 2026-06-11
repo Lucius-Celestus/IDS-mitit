@@ -1,0 +1,232 @@
+# AEGIS-NDR .gitignore
+# Исключаем ненужные файлы из контроля версий
+
+# ============================================================
+# Build artifacts & compilation
+# ============================================================
+target/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg
+*.so
+.env
+.venv
+venv/
+ENV/
+
+# ============================================================
+# Docker & containers
+# ============================================================
+.dockerignore
+docker-compose.override.yml
+*.tar
+*.tar.gz
+
+# ============================================================
+# IDE & Editor
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.classpath
+.c9/
+*.sublime-project
+*.sublime-workspace
+*.iml
+*.iws
+*.ipr
+.history/
+
+# ============================================================
+# IDE specific settings (but keep .vscode/settings.json)
+# ============================================================
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
+
+# ============================================================
+# OS specific
+# ============================================================
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+
+# ============================================================
+# Data & Logs
+# ============================================================
+data/logs/*.jsonl
+data/logs/*.log
+data/datasets/*
+*.log
+logs/
+LOG*
+log-*.txt
+access.log
+error.log
+
+# ============================================================
+# Models & Knowledge
+# ============================================================
+data/knowledge/*.joblib
+models/
+*.model
+*.weights
+*.w2v
+
+# ============================================================
+# Config & Secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+secrets/
+config/local.json
+config/private.json
+config.local.yml
+credentials.json
+api_keys.json
+
+# ============================================================
+# Temporary files
+# ============================================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+.tmp
+.cache
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+.hypothesis/
+
+# ============================================================
+# Test outputs & reports
+# ============================================================
+coverage/
+coverage.xml
+*.coverage
+test-results/
+test-output/
+junit.xml
+test-report.html
+
+# ============================================================
+# Rust specific
+# ============================================================
+Cargo.lock
+/target/
+**/*.rs.bk
+*.pdb
+debug/
+release/
+
+# ============================================================
+# Python specific
+# ============================================================
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.whl
+
+# ============================================================
+# Node.js specific (if used)
+# ============================================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# ============================================================
+# Documentation build
+# ============================================================
+docs/_build/
+docs/.doctrees/
+site/
+
+# ============================================================
+# Virtual environments
+# ============================================================
+venv/
+.venv
+env/
+.env
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================================
+# Auto-generated files (protobuf, gRPC)
+# ============================================================
+*_pb2.py
+*_pb2_grpc.py
+*_pb2*.rs
+*.pb.go
+*.pb.cc
+*.pb.h
+
+# ============================================================
+# Crash dumps
+# ============================================================
+*.stackdump
+core.*
+vgcore.*
+
+# ============================================================
+# AEGIS-specific temporary files
+# ============================================================
+FIX_*.md
+TEMP_*.py
+TEMP_*.rs
+debug_*.log
+test_output_*.txt
+network_trace_*.pcap
+
+# ============================================================
+# But DO NOT ignore:
+# ============================================================
+!.gitkeep
+!.gitmodules
+!.github/
+!README.md
+!QUICKSTART.md
+!MANAGEMENT.md
+!docker-compose.yml
+!Dockerfile
+!*.md
+!.dockerignore
